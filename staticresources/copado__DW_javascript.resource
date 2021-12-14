@@ -668,7 +668,7 @@ var targetDomain = '';
             'DataTemplateObjectResult?templateId=' +
             templateId +
             '&templateName=' +
-            encodeURIComponent(templateName) +
+            templateName +
             '&deploymentId=' +
             dId +
             '&stepId=' +

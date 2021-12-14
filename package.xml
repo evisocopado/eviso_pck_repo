@@ -4,5 +4,9 @@
         <members>copado__ACADEMY</members>
         <name>CustomLabel</name>
     </types>
+    <types>
+        <members>es</members>
+        <name>Translations</name>
+    </types>
     <version>53.0</version>
 </Package>

@@ -485,7 +485,7 @@ var copadoApp = {
                 'DataTemplateObjectResult?templateId=' +
                 templateId +
                 '&templateName=' +
-                encodeURIComponent(templateName) +
+                templateName +
                 '&deploymentId=' +
                 copadoApp.data.dep.Id +
                 '&stepId=' +
@@ -4176,15 +4176,8 @@ var copadoDataTemplateStep = {
             me.resetDefaults();
         }
         // set selected data source
-        if (
-            copadoDataTemplateStep.data.source &&
-            copadoDataTemplateStep.data.source.type &&
-            copadoDataTemplateStep.data.source.type === 'DATASET' &&
-            document.getElementById('DATASET')
-        ) {
-            document.getElementById('DATASET').checked = true;
-        } else if (copadoDataTemplateStep && copadoDataTemplateStep.dataTemplateId != '' && document.getElementById('ENVIRONMENT')) {
-            document.getElementById('ENVIRONMENT').checked = true;
+        if (copadoDataTemplateStep.data.source && copadoDataTemplateStep.data.source.type) {
+            $copado('[id$=DataSourceType]').val(copadoDataTemplateStep.data.source.type);
         }
 
         copadoDataTemplateStep.toggleHtmlElementsVisibility();
@@ -4385,7 +4378,7 @@ var copadoDataTemplateStep = {
         $copado('[id$=openRelationshipDiagram]').hide();
         $copado('[id$=editTemplateFilter]').hide();
         // new properties for datasets
-        $copado('[id$=ENVIRONMENT]').prop('checked', true);
+        $copado('[id$=DataSourceType]').val('ENVIRONMENT');
         $copado('[id$=SourceDataSet]').val('');
         $copado('[id$=SourceDataSet_lkid]').val('');
         $copado('[id$=SourceDataSet_lkold]').val('');
@@ -4404,10 +4397,11 @@ var copadoDataTemplateStep = {
     },
     isValid: function() {
         if (!copadoDataTemplateStep.data.source) {
-            return copadoDataTemplateStep.data.dataTemplateId && copadoDataTemplateStep.data.dataTemplateId !== '000000000000000';
+            return copadoDataTemplateStep.data.dataTemplateId !== '';
         }
-        let templateSelected = copadoDataTemplateStep.data.source.type == 'ENVIRONMENT' && !(copadoDataTemplateStep.data.dataTemplateId && copadoDataTemplateStep.data.dataTemplateId !== '000000000000000') ? false : true;
-        let sourceSelected = copadoDataTemplateStep.data.source.type == 'DATASET' && !copadoDataTemplateStep.data.source.id ? false : true;
+        let templateSelected =
+            copadoDataTemplateStep.data.source.type == 'ENVIRONMENT' && copadoDataTemplateStep.data.dataTemplateId == '' ? false : true;
+        let sourceSelected = copadoDataTemplateStep.data.source.type == 'DATASET' && copadoDataTemplateStep.data.source.id == '' ? false : true;
         return templateSelected && sourceSelected;
     },
     openRelationDataTemplate: function(elementId) {
@@ -4520,9 +4514,7 @@ var copadoDataTemplateStep = {
         copadoDataTemplateStep.toggleSourceElements(copadoDataTemplateStep.data.source.type);
         // refresh data set information
         let dataSetRecord = copadoDataTemplateStep.getDataSetDetails(copadoDataTemplateStep.data);
-        if(dataSetRecord){
-            copadoDataTemplateStep.parentId = dataSetRecord.Id;
-        }
+        copadoDataTemplateStep.parentId = dataSetRecord.Id;
     },
     toggleDestinationElements: function(destinationType) {
         let sourceDataTemplatePanel = document.getElementById('dataTemplateSourcePanel');
@@ -4530,8 +4522,7 @@ var copadoDataTemplateStep = {
         let templateDetailsBlock = document.getElementById('dataTemplateInformation');
         let datasetDetailsBlock = document.getElementById('dataSetInformation');
 
-        let dataSourceTypeEnvironment = document.getElementById('ENVIRONMENT');
-        let dataSourceTypeDataSet = document.getElementById('DATASET');
+        let dataSourceTypeSelect = $copado('[id$=DataSourceType]');
         let destinationDataSetLookup = $copado('[id$=DestinationDataSet]');
 
         if (
@@ -4539,8 +4530,7 @@ var copadoDataTemplateStep = {
             destinationDataSetLookup &&
             templateDetailsBlock &&
             datasetDetailsBlock &&
-            dataSourceTypeEnvironment &&
-            dataSourceTypeDataSet &&
+            dataSourceTypeSelect &&
             destinationDataSetLookup
         ) {
             switch (destinationType) {
@@ -4548,8 +4538,7 @@ var copadoDataTemplateStep = {
                 case undefined:
                     destinationDataSetPanel.style.display = 'none';
 
-                    dataSourceTypeEnvironment.disabled = false;
-                    dataSourceTypeDataSet.disabled = false;
+                    dataSourceTypeSelect.attr('disabled', false);
                     destinationDataSetLookup.attr('disabled', false);
                     break;
                 case 'DATASET':
@@ -4560,8 +4549,7 @@ var copadoDataTemplateStep = {
                         datasetDetailsBlock.style.display = 'block';
                     }
 
-                    dataSourceTypeEnvironment.disabled = true;
-                    dataSourceTypeDataSet.disabled = true;
+                    dataSourceTypeSelect.attr('disabled', true);
                     destinationDataSetLookup.attr('disabled', true);
                     break;
             }
