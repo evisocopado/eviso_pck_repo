@@ -8,6 +8,13 @@
         <value>This is a custom label</value>
     </labels>
     <labels>
+        <fullName>EVM_CL_002</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>EVM_CL_002</shortDescription>
+        <value>This is a custom label</value>
+    </labels>
+    <labels>
         <fullName>EVM_CL_SNAPSHOT_TEST</fullName>
         <language>en_US</language>
         <protected>true</protected>
