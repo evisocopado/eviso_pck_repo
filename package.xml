@@ -2,7 +2,7 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>EVM_CL_002</members>
-        <members>copado__BackToUserStory</members>
+        <members>copado__ACADEMY</members>
         <name>CustomLabel</name>
     </types>
     <version>53.0</version>
